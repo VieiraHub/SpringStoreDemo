@@ -2,10 +2,17 @@ package com.vieiraatelier.demostore.domain;
 
 import java.io.Serializable;
 
-//@Ent
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Category implements Serializable {
 	private static final long serialVersionUID = -9013424695179346807L;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
 	
