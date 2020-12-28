@@ -7,12 +7,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.vieiraatelier.demostore.domain.Address;
 import com.vieiraatelier.demostore.domain.Category;
 import com.vieiraatelier.demostore.domain.City;
+import com.vieiraatelier.demostore.domain.Customer;
 import com.vieiraatelier.demostore.domain.Product;
 import com.vieiraatelier.demostore.domain.State;
+import com.vieiraatelier.demostore.domain.enums.CustomerType;
+import com.vieiraatelier.demostore.repositories.AddressRepository;
 import com.vieiraatelier.demostore.repositories.CategoryRepository;
 import com.vieiraatelier.demostore.repositories.CityRepository;
+import com.vieiraatelier.demostore.repositories.CustomerRepository;
 import com.vieiraatelier.demostore.repositories.ProductRepository;
 import com.vieiraatelier.demostore.repositories.StateRepository;
 
@@ -30,6 +35,12 @@ public class DemostoreApplication implements CommandLineRunner {
 	
 	@Autowired
 	private CityRepository cityRepository; 
+	
+	@Autowired
+	private CustomerRepository customerRepository; 
+	
+	@Autowired
+	private AddressRepository addressRepository; 
 	
 	public static void main(String[] args) {
 		SpringApplication.run(DemostoreApplication.class, args);
@@ -66,6 +77,16 @@ public class DemostoreApplication implements CommandLineRunner {
 		
 		stateRepository.saveAll(Arrays.asList(s1, s2));
 		cityRepository.saveAll(Arrays.asList(c1, c2, c3));
+		
+		Customer cust1 = new Customer(null, "Maria Silva", "maria@gmail.com", "3652146980", CustomerType.PHYSICAL_PERSON);
+		cust1.getPhones().addAll(Arrays.asList("918463650","910254783"));
+		
+		Address add1 = new Address(null, "S Spring", "634", "Apt 500", "Long Beach", "90014", c1, cust1);
+		Address add2 = new Address(null, "Mockingbird Ln", "708", "A", "Pasadena", "77502", c2, cust1);
+		cust1.getAddresses().addAll(Arrays.asList(add1, add2));
+		
+		customerRepository.saveAll(Arrays.asList(cust1));
+		addressRepository.saveAll(Arrays.asList(add1, add2));
 	}
 
 }
