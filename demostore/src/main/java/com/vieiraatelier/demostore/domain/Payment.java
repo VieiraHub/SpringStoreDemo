@@ -10,10 +10,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.vieiraatelier.demostore.domain.enums.PaymentStatus;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Payment implements Serializable {
 	private static final long serialVersionUID = 3497522015276872682L;
 	
@@ -21,6 +22,7 @@ public abstract class Payment implements Serializable {
 	private Integer id;
 	private Integer status;
 	
+	@JsonBackReference
 	@OneToOne
 	@JoinColumn(name = "order_id")
 	@MapsId
