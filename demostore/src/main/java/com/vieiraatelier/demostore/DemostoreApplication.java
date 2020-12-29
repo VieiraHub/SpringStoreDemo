@@ -13,6 +13,7 @@ import com.vieiraatelier.demostore.domain.Category;
 import com.vieiraatelier.demostore.domain.City;
 import com.vieiraatelier.demostore.domain.Customer;
 import com.vieiraatelier.demostore.domain.Order;
+import com.vieiraatelier.demostore.domain.OrderItem;
 import com.vieiraatelier.demostore.domain.Payment;
 import com.vieiraatelier.demostore.domain.PaymentWithCard;
 import com.vieiraatelier.demostore.domain.PaymentWithCheck;
@@ -24,6 +25,7 @@ import com.vieiraatelier.demostore.repositories.AddressRepository;
 import com.vieiraatelier.demostore.repositories.CategoryRepository;
 import com.vieiraatelier.demostore.repositories.CityRepository;
 import com.vieiraatelier.demostore.repositories.CustomerRepository;
+import com.vieiraatelier.demostore.repositories.OrderItemRepository;
 import com.vieiraatelier.demostore.repositories.OrderRepository;
 import com.vieiraatelier.demostore.repositories.PaymentRepository;
 import com.vieiraatelier.demostore.repositories.ProductRepository;
@@ -55,6 +57,9 @@ public class DemostoreApplication implements CommandLineRunner {
 	
 	@Autowired
 	private PaymentRepository paymentRepository; 
+	
+	@Autowired
+	private OrderItemRepository orderItemRepository; 
 	
 	public static void main(String[] args) {
 		SpringApplication.run(DemostoreApplication.class, args);
@@ -116,6 +121,19 @@ public class DemostoreApplication implements CommandLineRunner {
 		
 		orderRepository.saveAll(Arrays.asList(ord1, ord2));
 		paymentRepository.saveAll(Arrays.asList(pay1, pay2));
+		
+		OrderItem oi1 = new OrderItem(ord1, p1, 0.00, 1, 2000.00);
+		OrderItem oi2 = new OrderItem(ord1, p3, 0.00, 2, 80.00);
+		OrderItem oi3 = new OrderItem(ord2, p2, 100.00, 1, 800.00);
+		
+		ord1.getItems().addAll(Arrays.asList(oi1, oi2));
+		ord2.getItems().addAll(Arrays.asList(oi3));
+		
+		p1.getItems().addAll(Arrays.asList(oi1));
+		p2.getItems().addAll(Arrays.asList(oi3));
+		p3.getItems().addAll(Arrays.asList(oi2));
+		
+		orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3));
 	}
 
 }

@@ -2,6 +2,8 @@ package com.vieiraatelier.demostore.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -33,6 +36,9 @@ public class Order implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "delivery_address_id")
 	private Address deliveryAddress;
+	
+	@OneToMany(mappedBy = "id.order")
+	private Set<OrderItem> items = new HashSet<>();
 	
 	
 	public Order() {  }
@@ -64,6 +70,10 @@ public class Order implements Serializable {
 	public Address getDeliveryAddress() {  return deliveryAddress;  }
 
 	public void setDeliveryAddress(Address deliveryAddress) {  this.deliveryAddress = deliveryAddress;  }
+
+	public Set<OrderItem> getItems() {  return items;  }
+
+	public void setItems(Set<OrderItem> items) {  this.items = items;  }
 
 	@Override
 	public int hashCode() {
