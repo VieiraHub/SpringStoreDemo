@@ -69,6 +69,11 @@ public class DemostoreApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		Category cat1 = new Category(null, "Computing");
 		Category cat2 = new Category(null, "Office");
+		Category cat3 = new Category(null, "Home");
+		Category cat4 = new Category(null, "Electronics");
+		Category cat5 = new Category(null, "Gardening");
+		Category cat6 = new Category(null, "Decoration");
+		Category cat7 = new Category(null, "Perfumery");
 		
 		Product p1 = new Product(null, "Computer", 2000.0);
 		Product p2 = new Product(null, "Printer", 800.0);
@@ -81,7 +86,7 @@ public class DemostoreApplication implements CommandLineRunner {
 		p2.getCategories().addAll(Arrays.asList(cat1, cat2));
 		p3.getCategories().addAll(Arrays.asList(cat1));
 		
-		categoryRepository.saveAll(Arrays.asList(cat1, cat2));
+		categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6, cat7));
 		productRepository.saveAll(Arrays.asList(p1, p2, p3));
 		
 		State s1 = new State(null, "California");
