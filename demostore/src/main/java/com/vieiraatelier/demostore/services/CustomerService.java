@@ -56,7 +56,7 @@ public class CustomerService {
 		try {
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("Isn't possible to delete because there are related Entities");
+			throw new DataIntegrityException("Isn't possible to delete because there are related Orders");
 		}
 	}
 	
