@@ -2,21 +2,45 @@ package com.vieiraatelier.demostore.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.vieiraatelier.demostore.services.validations.CustomerInsert;
+
+@CustomerInsert
 public class CustomerNewDTO implements Serializable {
 	private static final long serialVersionUID = -248169673046266273L;
 	
+	@NotEmpty(message = "Filling is mandatory")
+	@Length(min = 5, max = 100, message = "The size should be between 4 to 100 characters")
 	private String name;
+	
+	@NotEmpty(message = "Filling is mandatory")
+	@Email(message = "Invalid email")
 	private String email;
+	
+	@NotEmpty(message = "Filling is mandatory")
 	private String taxPayerNumber;
+	
 	private Integer type;
 	
+	@NotEmpty(message = "Filling is mandatory")
 	private String street;
+	
+	@NotEmpty(message = "Filling is mandatory")
 	private String number;
+	
 	private String complement;
 	private String neighborhood;
+	
+	@NotEmpty(message = "Filling is mandatory")
 	private String postalCode;
 	
+	@NotEmpty(message = "Filling is mandatory")
 	private String phone1;
+	
 	private String phone2;
 	private String phone3;
 	
