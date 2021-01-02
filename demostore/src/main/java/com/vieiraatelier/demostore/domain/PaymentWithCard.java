@@ -2,9 +2,11 @@ package com.vieiraatelier.demostore.domain;
 
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.vieiraatelier.demostore.domain.enums.PaymentStatus;
 
 @Entity
+@JsonTypeName("paymentWithCard")
 public class PaymentWithCard extends Payment {
 	private static final long serialVersionUID = -8113160789435106024L;
 	
