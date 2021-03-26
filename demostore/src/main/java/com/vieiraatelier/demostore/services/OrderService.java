@@ -66,7 +66,7 @@ public class OrderService {
 			oi.setOrder(obj);
 		}
 		orderItemRepo.saveAll(obj.getItems());
-		emailService.sendOrderConfirmationHtmlEmail(obj);
+		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 	}
 }
