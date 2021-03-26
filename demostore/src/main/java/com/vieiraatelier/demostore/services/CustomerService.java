@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,9 @@ public class CustomerService {
 	
 	@Autowired
 	private AddressRepository addressRepo;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	public Customer find(Integer id) {
 		Optional<Customer> obj = repo.findById(id);
@@ -70,13 +74,17 @@ public class CustomerService {
 	}
 	
 	public Customer fromDTO(CustomerDTO objDto) {
-		return new Customer(objDto.getId(), objDto.getName(), objDto.getEmail(), null, null);
+		return new Customer(objDto.getId(), objDto.getName(), objDto.getEmail(), null, null, null);
 	}
 	
 	public Customer fromDTO(CustomerNewDTO objDto) {
-		Customer customer = new Customer(null, objDto.getName(), objDto.getEmail(),objDto.getTaxPayerNumber(), CustomerType.toEnum(objDto.getType()));
+		Customer customer = new Customer(null, objDto.getName(), objDto.getEmail(),
+				objDto.getTaxPayerNumber(), CustomerType.toEnum(objDto.getType()), 
+				passwordEncoder.encode(objDto.getPassword()));
 		City city = new City(objDto.getCityId(), null, null);
-		Address address = new Address(null, objDto.getStreet(), objDto.getNumber(), objDto.getComplement(), objDto.getNeighborhood(), objDto.getPostalCode(), city, customer);
+		Address address = new Address(null, objDto.getStreet(), objDto.getNumber(), 
+				objDto.getComplement(), objDto.getNeighborhood(), objDto.getPostalCode(), 
+				city, customer);
 		customer.getAddresses().add(address);
 		customer.getPhones().add(objDto.getPhone1());
 		if (objDto.getPhone2() != null) customer.getPhones().add(objDto.getPhone2());

@@ -33,6 +33,9 @@ public class Customer implements Serializable {
 	private String taxPayerNumber;
 	private Integer type;
 	
+	@JsonIgnore
+	private String password;
+	
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private List<Address> addresses = new ArrayList<>();
 	
@@ -47,13 +50,14 @@ public class Customer implements Serializable {
 	
 	public Customer() {  }
 	
-	public Customer(Integer id, String name, String email, String taxPayerNumber, CustomerType type) {
+	public Customer(Integer id, String name, String email, String taxPayerNumber, CustomerType type, String password) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.taxPayerNumber = taxPayerNumber;
 		this.type = (type == null) ? null : type.getCode();
+		this.password = password;
 	}
 	
 	public Integer getId() {  return id;  }
@@ -75,6 +79,10 @@ public class Customer implements Serializable {
 	public CustomerType getType() {  return CustomerType.toEnum(type);  }
 	
 	public void setType(CustomerType type) {  this.type = type.getCode();  }
+	
+	public String getPassword() { return password; }
+
+	public void setPassword(String password) { this.password = password; }
 
 	public List<Address> getAddresses() {  return addresses;  }
 
