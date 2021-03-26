@@ -33,6 +33,9 @@ public class OrderService {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private CustomerService customerService;
 
 	public Order find(Integer id) {
 		Optional<Order> obj = repo.findById(id);
@@ -44,6 +47,7 @@ public class OrderService {
 	public Order insert(Order obj) {
 		obj.setId(null);
 		obj.setInstance(new Date());
+		obj.setCustomer(customerService.find(obj.getCustomer().getId()));
 		obj.getPayment().setStatus(PaymentStatus.PENDING);
 		obj.getPayment().setOrder(obj);
 		if (obj.getPayment() instanceof PaymentWithCheck) {
@@ -54,10 +58,12 @@ public class OrderService {
 		paymentRepo.save(obj.getPayment());
 		for(OrderItem oi : obj.getItems()) {
 			oi.setDiscount(0.0);
-			oi.setPrice(productService.find(oi.getProduct().getId()).getPrice());
+			oi.setProduct(productService.find(oi.getProduct().getId()));
+			oi.setPrice(oi.getProduct().getPrice());
 			oi.setOrder(obj);
 		}
 		orderItemRepo.saveAll(obj.getItems());
+		System.out.println(obj);
 		return obj;
 	}
 }
