@@ -21,6 +21,7 @@ import com.vieiraatelier.demostore.domain.Product;
 import com.vieiraatelier.demostore.domain.State;
 import com.vieiraatelier.demostore.domain.enums.CustomerType;
 import com.vieiraatelier.demostore.domain.enums.PaymentStatus;
+import com.vieiraatelier.demostore.domain.enums.Profile;
 import com.vieiraatelier.demostore.repositories.AddressRepository;
 import com.vieiraatelier.demostore.repositories.CategoryRepository;
 import com.vieiraatelier.demostore.repositories.CityRepository;
@@ -125,12 +126,21 @@ public class DBService {
 				CustomerType.PHYSICAL_PERSON, passwordEncoder.encode("123"));
 		cust1.getPhones().addAll(Arrays.asList("918463650","910254783"));
 		
+		Customer cust2 = new Customer(null, "Ana Costa", "correiodovieira@gmail.com", "31628382740", 
+				CustomerType.PHYSICAL_PERSON, passwordEncoder.encode("123"));
+		cust2.addProfile(Profile.ADMIN);
+		cust2.getPhones().addAll(Arrays.asList("918398250","910139583"));
+		
+		
+		
 		Address add1 = new Address(null, "S Spring", "634", "Apt 500", "Long Beach", "90014", c1, cust1);
 		Address add2 = new Address(null, "Mockingbird Ln", "708", "A", "Pasadena", "77502", c2, cust1);
+		Address add3 = new Address(null, "La Branch St", "502", null, "Houston", "77004", c2, cust2);
 		cust1.getAddresses().addAll(Arrays.asList(add1, add2));
+		cust2.getAddresses().addAll(Arrays.asList(add3));
 		
-		customerRepository.saveAll(Arrays.asList(cust1));
-		addressRepository.saveAll(Arrays.asList(add1, add2));
+		customerRepository.saveAll(Arrays.asList(cust1, cust2));
+		addressRepository.saveAll(Arrays.asList(add1, add2, add3));
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		
