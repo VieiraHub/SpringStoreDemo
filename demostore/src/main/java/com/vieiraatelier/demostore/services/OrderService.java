@@ -4,9 +4,13 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.vieiraatelier.demostore.domain.Customer;
 import com.vieiraatelier.demostore.domain.Order;
 import com.vieiraatelier.demostore.domain.OrderItem;
 import com.vieiraatelier.demostore.domain.PaymentWithCheck;
@@ -14,6 +18,8 @@ import com.vieiraatelier.demostore.domain.enums.PaymentStatus;
 import com.vieiraatelier.demostore.repositories.OrderItemRepository;
 import com.vieiraatelier.demostore.repositories.OrderRepository;
 import com.vieiraatelier.demostore.repositories.PaymentRepository;
+import com.vieiraatelier.demostore.security.UserSpringSecurity;
+import com.vieiraatelier.demostore.services.exceptions.AuthorizationException;
 import com.vieiraatelier.demostore.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -69,4 +75,17 @@ public class OrderService {
 		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 	}
+	
+	public Page<Order> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		
+		UserSpringSecurity user = UserService.authenticated();
+		if(user == null) {
+			throw new AuthorizationException("Access denied!");
+		}
+		
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Customer customer = customerService.find(user.getId());
+		return repo.findByCustomer(customer, pageRequest);
+	}
+	
 }
