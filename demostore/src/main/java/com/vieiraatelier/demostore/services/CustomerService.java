@@ -16,10 +16,13 @@ import com.vieiraatelier.demostore.domain.Address;
 import com.vieiraatelier.demostore.domain.City;
 import com.vieiraatelier.demostore.domain.Customer;
 import com.vieiraatelier.demostore.domain.enums.CustomerType;
+import com.vieiraatelier.demostore.domain.enums.Profile;
 import com.vieiraatelier.demostore.dto.CustomerDTO;
 import com.vieiraatelier.demostore.dto.CustomerNewDTO;
 import com.vieiraatelier.demostore.repositories.AddressRepository;
 import com.vieiraatelier.demostore.repositories.CustomerRepository;
+import com.vieiraatelier.demostore.security.UserSpringSecurity;
+import com.vieiraatelier.demostore.services.exceptions.AuthorizationException;
 import com.vieiraatelier.demostore.services.exceptions.DataIntegrityException;
 import com.vieiraatelier.demostore.services.exceptions.ObjectNotFoundException;
 
@@ -36,6 +39,11 @@ public class CustomerService {
 	private BCryptPasswordEncoder passwordEncoder;
 
 	public Customer find(Integer id) {
+		UserSpringSecurity user = UserService.authenticated();
+		if(user == null || !user.hasRole(Profile.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Access denied!");
+		}
+		
 		Optional<Customer> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Object not found! Id: " + id + ", Type: " + Customer.class.getName()));
