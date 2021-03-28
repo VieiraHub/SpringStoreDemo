@@ -112,6 +112,14 @@ public class CustomerService {
 	}
 	
 	public URI uploadProfilePicture(MultipartFile multiPartFile) {
-		return s3Service.uploadFile(multiPartFile);
+		UserSpringSecurity user = UserService.authenticated();
+		if(user == null) {
+			throw new AuthorizationException("Access denied.");
+		}
+		URI uri = s3Service.uploadFile(multiPartFile);
+		Customer customer = find(user.getId());
+		customer.setImageUrl(uri.toString());
+		repo.save(customer);
+		return uri;
 	}
 }
