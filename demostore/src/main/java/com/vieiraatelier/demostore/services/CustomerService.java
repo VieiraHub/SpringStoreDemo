@@ -1,10 +1,12 @@
 package com.vieiraatelier.demostore.services;
 
+import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,27 +35,33 @@ public class CustomerService {
 
 	@Autowired
 	private CustomerRepository repo;
-	
+
 	@Autowired
 	private AddressRepository addressRepo;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private S3Service s3Service;
 
+	@Autowired
+	private ImageService imageService;
+
+	@Value("${img.prefix.client.profile}")
+	private String prefix;
+
 	public Customer find(Integer id) {
 		UserSpringSecurity user = UserService.authenticated();
-		if(user == null || !user.hasRole(Profile.ADMIN) && !id.equals(user.getId())) {
+		if (user == null || !user.hasRole(Profile.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Access denied!");
 		}
-		
+
 		Optional<Customer> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Object not found! Id: " + id + ", Type: " + Customer.class.getName()));
 	}
-	
+
 	@Transactional
 	public Customer insert(Customer obj) {
 		obj.setId(null);
@@ -61,13 +69,13 @@ public class CustomerService {
 		addressRepo.saveAll(obj.getAddresses());
 		return obj;
 	}
-	
+
 	public Customer update(Customer obj) {
 		Customer newObj = find(obj.getId());
 		updateData(newObj, obj);
 		return repo.save(newObj);
 	}
-	
+
 	public void delete(Integer id) {
 		find(id);
 		try {
@@ -76,50 +84,50 @@ public class CustomerService {
 			throw new DataIntegrityException("Isn't possible to delete because there are related Orders");
 		}
 	}
-	
+
 	public List<Customer> findAll() {
 		return repo.findAll();
 	}
-	
+
 	public Page<Customer> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
 	}
-	
+
 	public Customer fromDTO(CustomerDTO objDto) {
 		return new Customer(objDto.getId(), objDto.getName(), objDto.getEmail(), null, null, null);
 	}
-	
+
 	public Customer fromDTO(CustomerNewDTO objDto) {
-		Customer customer = new Customer(null, objDto.getName(), objDto.getEmail(),
-				objDto.getTaxPayerNumber(), CustomerType.toEnum(objDto.getType()), 
-				passwordEncoder.encode(objDto.getPassword()));
+		Customer customer = new Customer(null, objDto.getName(), objDto.getEmail(), objDto.getTaxPayerNumber(),
+				CustomerType.toEnum(objDto.getType()), passwordEncoder.encode(objDto.getPassword()));
 		City city = new City(objDto.getCityId(), null, null);
-		Address address = new Address(null, objDto.getStreet(), objDto.getNumber(), 
-				objDto.getComplement(), objDto.getNeighborhood(), objDto.getPostalCode(), 
-				city, customer);
+		Address address = new Address(null, objDto.getStreet(), objDto.getNumber(), objDto.getComplement(),
+				objDto.getNeighborhood(), objDto.getPostalCode(), city, customer);
 		customer.getAddresses().add(address);
 		customer.getPhones().add(objDto.getPhone1());
-		if (objDto.getPhone2() != null) customer.getPhones().add(objDto.getPhone2());
-		if (objDto.getPhone3() != null) customer.getPhones().add(objDto.getPhone3());
-		
+		if (objDto.getPhone2() != null)
+			customer.getPhones().add(objDto.getPhone2());
+		if (objDto.getPhone3() != null)
+			customer.getPhones().add(objDto.getPhone3());
+
 		return customer;
 	}
-	
+
 	private void updateData(Customer newObj, Customer obj) {
 		newObj.setName(obj.getName());
 		newObj.setEmail(obj.getEmail());
 	}
-	
+
 	public URI uploadProfilePicture(MultipartFile multiPartFile) {
 		UserSpringSecurity user = UserService.authenticated();
-		if(user == null) {
+		if (user == null) {
 			throw new AuthorizationException("Access denied.");
 		}
-		URI uri = s3Service.uploadFile(multiPartFile);
-		Customer customer = find(user.getId());
-		customer.setImageUrl(uri.toString());
-		repo.save(customer);
-		return uri;
+
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(multiPartFile);
+		String fileName = prefix + user.getId() + ".jpg";
+
+		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
 	}
 }
