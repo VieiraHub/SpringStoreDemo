@@ -13,6 +13,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import com.vieiraatelier.demostore.domain.Customer;
 import com.vieiraatelier.demostore.domain.Order;
 
 public abstract class AbstractEmailService implements EmailService {
@@ -28,11 +29,11 @@ public abstract class AbstractEmailService implements EmailService {
 	
 	@Override
 	public void sendOrderConfirmationEmail(Order obj) {
-		SimpleMailMessage sm = prepareSimpleMailMessageFromPedido(obj);
+		SimpleMailMessage sm = prepareSimpleMailMessageFromOrder(obj);
 		sendEmail(sm);
 	}
 
-	protected SimpleMailMessage prepareSimpleMailMessageFromPedido(Order obj) {
+	protected SimpleMailMessage prepareSimpleMailMessageFromOrder(Order obj) {
 		SimpleMailMessage sm = new SimpleMailMessage();
 		sm.setTo(obj.getCustomer().getEmail());
 		sm.setFrom(sender);
@@ -42,7 +43,7 @@ public abstract class AbstractEmailService implements EmailService {
 		return sm;
 	}
 	
-	protected String htmlFromTemplatePedido(Order obj) {
+	protected String htmlFromTemplateOrder(Order obj) {
 		Context context = new Context();
 		context.setVariable("order", obj);
 		return templateEngine.process("email/orderConfirmation", context);
@@ -51,21 +52,40 @@ public abstract class AbstractEmailService implements EmailService {
 	@Override
 	public void sendOrderConfirmationHtmlEmail(Order obj) {
 		try {
-			MimeMessage mm = prepareMimeMessageFromPedido(obj);
+			MimeMessage mm = prepareMimeMessageFromOrder(obj);
 			sendHtmlEmail(mm);
 		} catch (MessagingException e) {
 			sendOrderConfirmationEmail(obj);
 		}
 	}
 
-	protected MimeMessage prepareMimeMessageFromPedido(Order obj) throws MessagingException {
+	protected MimeMessage prepareMimeMessageFromOrder(Order obj) throws MessagingException {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper mmh = new MimeMessageHelper(mimeMessage, true);
 		mmh.setTo(obj.getCustomer().getEmail());
 		mmh.setFrom(sender);
 		mmh.setSubject("Order confirmed! Code: " + obj.getId());
 		mmh.setSentDate(new Date(System.currentTimeMillis()));
-		mmh.setText(htmlFromTemplatePedido(obj), true);
+		mmh.setText(htmlFromTemplateOrder(obj), true);
 		return mimeMessage;
 	}
+
+	@Override
+	public void sendNewPasswordEmail(Customer customer, String newPass) {
+		SimpleMailMessage sm = prepareNewPasswordEmail(customer, newPass);
+		sendEmail(sm);
+		
+	}
+
+	protected SimpleMailMessage prepareNewPasswordEmail(Customer customer, String newPass) {
+		SimpleMailMessage sm = new SimpleMailMessage();
+		sm.setTo(customer.getEmail());
+		sm.setFrom(sender);
+		sm.setSubject("New Password request.");
+		sm.setSentDate(new Date(System.currentTimeMillis()));
+		sm.setText("New Password: " + newPass);
+		return sm;
+	}
+	
+	
 }
