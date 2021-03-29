@@ -12,15 +12,9 @@ public class EmailDTO implements Serializable {
 	@Email(message = "Invalid email")
 	private String email;
 
-	public EmailDTO() {
-	}
+	public EmailDTO() {  }
 
-	public String getEmail() {
-		return email;
-	}
+	public String getEmail() { return email; }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
+	public void setEmail(String email) { this.email = email; }
 }

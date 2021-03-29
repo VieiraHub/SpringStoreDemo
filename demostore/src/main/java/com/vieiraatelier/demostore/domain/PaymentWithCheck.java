@@ -32,6 +32,5 @@ public class PaymentWithCheck extends Payment {
 
 	public Date getPayDate() {  return payDate;  }
 
-	public void setPayDate(Date payDate) {  this.payDate = payDate;  }
-	
+	public void setPayDate(Date payDate) {  this.payDate = payDate;  }	
 }

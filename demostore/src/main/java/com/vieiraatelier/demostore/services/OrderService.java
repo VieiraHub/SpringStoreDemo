@@ -87,5 +87,4 @@ public class OrderService {
 		Customer customer = customerService.find(user.getId());
 		return repo.findByCustomer(customer, pageRequest);
 	}
-	
 }

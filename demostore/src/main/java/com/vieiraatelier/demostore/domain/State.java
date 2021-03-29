@@ -63,6 +63,4 @@ public class State {
 			return false;
 		return true;
 	}
-	
-	
 }

@@ -39,8 +39,7 @@ public class Product implements Serializable {
 	private Set<OrderItem> items = new HashSet<>();
 	
 	
-	public Product() {
-	}
+	public Product() {  }
 	
 	public Product(Integer id, String name, Double price) {
 		super();

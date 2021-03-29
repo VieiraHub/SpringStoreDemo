@@ -35,7 +35,6 @@ public class AuthService {
 		
 		customerRepository.save(customer);
 		emailService.sendNewPasswordEmail(customer, newPass);
-		
 	}
 
 	private String newPassword() {

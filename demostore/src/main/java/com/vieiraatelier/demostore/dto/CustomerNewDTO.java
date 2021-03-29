@@ -106,5 +106,4 @@ public class CustomerNewDTO implements Serializable {
 	public Integer getCityId() {  return cityId;  }
 
 	public void setCityId(Integer cityId) {  this.cityId = cityId;  }
-
 }

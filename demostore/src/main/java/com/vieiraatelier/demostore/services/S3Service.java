@@ -36,7 +36,6 @@ public class S3Service {
 		} catch (IOException e) {
 			throw new FileException("Error of IO: " + e.getMessage());
 		}
-
 	}
 
 	public URI uploadFile(InputStream inputStream, String fileName, String contentType) {

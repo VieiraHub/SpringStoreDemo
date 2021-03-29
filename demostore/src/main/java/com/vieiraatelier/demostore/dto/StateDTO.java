@@ -11,28 +11,18 @@ public class StateDTO implements Serializable {
 	private Integer id;
 	private String name;
 
-	public StateDTO() {
-	}
+	public StateDTO() {  }
 
 	public StateDTO(State obj) {
 		this.id = obj.getId();
 		this.name = obj.getName();
 	}
 
-	public Integer getId() {
-		return id;
-	}
+	public Integer getId() { return id; }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	public void setId(Integer id) { this.id = id; }
 
-	public String getName() {
-		return name;
-	}
+	public String getName() { return name; }
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	public void setName(String name) { this.name = name; }
 }

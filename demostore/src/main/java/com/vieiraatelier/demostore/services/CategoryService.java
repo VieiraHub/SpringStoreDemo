@@ -48,9 +48,7 @@ public class CategoryService {
 		}
 	}
 	
-	public List<Category> findAll() {
-		return repo.findAll();
-	}
+	public List<Category> findAll() { return repo.findAll(); }
 	
 	public Page<Category> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);

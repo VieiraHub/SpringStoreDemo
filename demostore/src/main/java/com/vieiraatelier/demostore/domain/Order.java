@@ -132,5 +132,4 @@ public class Order implements Serializable {
 		builder.append(nf.format(getTotalValue()));
 		return builder.toString();
 	}
-	
 }

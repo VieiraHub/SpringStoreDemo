@@ -73,8 +73,7 @@ public abstract class AbstractEmailService implements EmailService {
 	@Override
 	public void sendNewPasswordEmail(Customer customer, String newPass) {
 		SimpleMailMessage sm = prepareNewPasswordEmail(customer, newPass);
-		sendEmail(sm);
-		
+		sendEmail(sm);	
 	}
 
 	protected SimpleMailMessage prepareNewPasswordEmail(Customer customer, String newPass) {
@@ -86,6 +85,4 @@ public abstract class AbstractEmailService implements EmailService {
 		sm.setText("New Password: " + newPass);
 		return sm;
 	}
-	
-	
 }

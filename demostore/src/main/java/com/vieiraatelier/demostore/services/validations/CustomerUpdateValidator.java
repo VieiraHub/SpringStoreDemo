@@ -25,8 +25,7 @@ public class CustomerUpdateValidator implements ConstraintValidator<CustomerUpda
 	private CustomerRepository repo;
 	
 	@Override
-	public void initialize(CustomerUpdate customerUpdate) {
-	}
+	public void initialize(CustomerUpdate customerUpdate) {  }
 
 	@Override
 	public boolean isValid(CustomerDTO objDto, ConstraintValidatorContext context) {

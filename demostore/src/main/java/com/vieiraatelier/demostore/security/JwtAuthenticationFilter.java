@@ -38,7 +38,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(creds.getEmail(),
 					creds.getPassword(), new ArrayList<>());
 			Authentication auth = authenticationManager.authenticate(authToken);
-
 			return auth;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -73,7 +72,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			response.setContentType("application/json");
 			response.getWriter().append(json());
 		}
-		
 	}
 
 }

@@ -14,7 +14,5 @@ public class StateService {
 	@Autowired
 	private StateRepository repo;
 	
-	public List<State> findAll(){
-		return repo.findAllByOrderByName();
-	}
+	public List<State> findAll() { return repo.findAllByOrderByName(); }
 }

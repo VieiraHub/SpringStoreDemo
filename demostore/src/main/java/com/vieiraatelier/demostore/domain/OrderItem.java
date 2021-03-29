@@ -97,6 +97,4 @@ public class OrderItem implements Serializable {
 		builder.append("\n");
 		return builder.toString();
 	}
-	
-	
 }

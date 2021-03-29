@@ -88,9 +88,7 @@ public class CustomerService {
 		}
 	}
 
-	public List<Customer> findAll() {
-		return repo.findAll();
-	}
+	public List<Customer> findAll() { return repo.findAll(); }
 	
 	public Customer findByEmail(String email) {
 		UserSpringSecurity user = UserService.authenticated();
@@ -147,7 +145,6 @@ public class CustomerService {
 		jpgImage = imageService.resize(jpgImage, size);
 		
 		String fileName = prefix + user.getId() + ".jpg";
-
 		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
 	}
 }

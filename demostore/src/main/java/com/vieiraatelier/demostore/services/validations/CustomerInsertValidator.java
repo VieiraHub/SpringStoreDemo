@@ -21,8 +21,7 @@ public class CustomerInsertValidator implements ConstraintValidator<CustomerInse
 	private CustomerRepository repo;
 	
 	@Override
-	public void initialize(CustomerInsert customerInsert) {
-	}
+	public void initialize(CustomerInsert customerInsert) {  }
 
 	@Override
 	public boolean isValid(CustomerNewDTO objDto, ConstraintValidatorContext context) {

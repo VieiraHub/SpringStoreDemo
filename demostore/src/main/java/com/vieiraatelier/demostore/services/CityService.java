@@ -14,7 +14,5 @@ public class CityService {
 	@Autowired
 	private CityRepository repo;
 	
-	public List<City> findByState(Integer stateId){
-		return repo.findCities(stateId);
-	}
+	public List<City> findByState(Integer stateId) { return repo.findCities(stateId); }
 }
